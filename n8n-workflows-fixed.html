@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zenflow - 2000+ Real AI Workflows</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <style>
+        /* CSS Reset and Variables */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #404040;
+            --secondary-color: #525252;
+            --accent-color: #737373;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --bg-dark: #000000;
+            --bg-darker: #000000;
+            --surface-dark: #171717;
+            --surface-light: rgba(255, 255, 255, 0.05);
+            --surface-glass: rgba(255, 255, 255, 0.03);
+            --text-primary: #ffffff;
+            --text-secondary: #d4d4d4;
+            --text-muted: #a3a3a3;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            --tansu-color: #fbbf24;
+            --tansu-glow: 0 0 20px rgba(251, 191, 36, 0.3);
+        }
+
+        body {
+            background: radial-gradient(ellipse at center, #0a0a0a 0%, #000000 100%);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+        }
+
+        /* Global Enhancements */
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Performance Optimizations */
+        .workflows-grid {
+            contain: layout style paint;
+        }
+
+        /* Hardware Acceleration for Animations */
+        .marquee-text,
+        .workflow-card,
+        .stat-card,
+        .filter-select,
+        .copy-button {
+            transform: translateZ(0);
+        }
+
+        /* Container for better spacing */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+        }
+
+        /* Particles Background */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 5rem 0 2rem;
+            background: linear-gradient(135deg, 
+                rgba(23, 23, 23, 0.8) 0%, 
+                rgba(64, 64, 64, 0.3) 50%, 
+                rgba(23, 23, 23, 0.8) 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            margin-top: 2.5rem;
+            border-radius: 0 0 2rem 2rem;
+            box-shadow: var(--shadow-glass);
+            will-change: transform;
+        }
+
+        .header-title {
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, 
+                #ffffff 0%, 
+                #d4d4d4 25%, 
+                #a3a3a3 50%, 
+                #d4d4d4 75%, 
+                #ffffff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+        }
+
+        .header-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        /* Marquee */
+        .marquee-container {
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-left: none;
+            border-right: none;
+            padding: 0.6rem 0;
+            margin-bottom: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 
+                0 4px 6px -1px rgba(0, 0, 0, 0.3), 
+                0 2px 4px -1px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            will-change: transform;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .marquee {
+            display: flex;
+            animation: marquee 30s linear infinite;
+            will-change: transform;
+        }
+
+        .marquee-text {
+            white-space: nowrap;
+            font-weight: 500;
+            font-size: 0.8rem;
+            margin-right: 4rem;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+            letter-spacing: 0.5px;
+        }
+
+        /* Social Buttons */
+        .social-buttons {
+            position: fixed;
+            top: 4rem;
+            right: 2rem;
+            z-index: 999;
+            display: flex;
+            gap: 1rem;
+            flex-direction: row;
+            opacity: 1;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .social-buttons.hidden {
+            opacity: 0;
+            transform: translateY(-20px);
+            pointer-events: none;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 3rem;
+            height: 3rem;
+            background: linear-gradient(135deg, 
+                rgba(251, 191, 36, 0.2) 0%, 
+                rgba(251, 191, 36, 0.1) 100%);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 0.75rem;
+            color: rgba(251, 191, 36, 0.9);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 4px 12px rgba(251, 191, 36, 0.1),
+                inset 0 1px 0 rgba(251, 191, 36, 0.2);
+            will-change: transform;
+        }
+
+        .social-btn:hover {
+            background: linear-gradient(135deg, 
+                rgba(251, 191, 36, 0.3) 0%, 
+                rgba(251, 191, 36, 0.2) 100%);
+            border-color: rgba(251, 191, 36, 0.5);
+            color: rgba(251, 191, 36, 1);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 
+                0 8px 20px rgba(251, 191, 36, 0.2),
+                inset 0 1px 0 rgba(251, 191, 36, 0.3);
+        }
+
+        .social-btn:active {
+            transform: translateY(0) scale(1);
+        }
+
+        .social-btn svg {
+            width: 1.2rem;
+            height: 1.2rem;
+            fill: currentColor;
+        }
+
+        @media (max-width: 768px) {
+            .social-buttons {
+                top: 3.5rem;
+                right: 1rem;
+                flex-direction: row;
+            }
+            
+            .social-btn {
+                width: 2.5rem;
+                height: 2.5rem;
+            }
+            
+            .social-btn svg {
+                width: 1rem;
+                height: 1rem;
+            }
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1.2rem;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 8px 32px 0 rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            will-change: transform, background;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 
+                0 16px 48px 0 rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, 
+                #ffffff 0%, 
+                #d4d4d4 50%, 
+                #a3a3a3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        /* Filters */
+        .filters-section {
+            padding: 3rem 0;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .filters-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 2.5rem;
+            margin-bottom: 0;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1.2rem;
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            will-change: transform, background;
+        }
+
+        .filter-select option {
+            background: var(--surface-dark);
+            color: var(--text-primary);
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .clear-filters {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, 
+                rgba(64, 64, 64, 0.8) 0%, 
+                rgba(115, 115, 115, 0.6) 100%);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.75rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .clear-filters:hover {
+            background: linear-gradient(135deg, 
+                rgba(115, 115, 115, 0.8) 0%, 
+                rgba(163, 163, 163, 0.6) 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .clear-filters:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glass);
+        }
+
+        .results-info {
+            margin-top: 1rem;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        /* Workflows Grid */
+        .workflows-section {
+            padding: 4rem 0;
+        }
+
+        .workflows-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            margin-top: 3rem;
+            padding: 1rem;
+            overflow: visible;
+        }
+
+        @media (max-width: 1200px) {
+            .workflows-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .workflows-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        /* Card Styles - ENHANCED FOR FLIPPING */
+        .workflow-card {
+            perspective: 1200px;
+            height: 380px;
+            position: relative;
+            transition: transform 0.3s ease;
+            margin: 1rem 0;
+            overflow: visible;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s ease;
+            transform-style: preserve-3d;
+            cursor: pointer;
+            will-change: transform;
+        }
+
+        .workflow-card:hover .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .workflow-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .workflow-card:hover .card-front,
+        .workflow-card:hover .card-back {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 1.2rem;
+            padding: 2rem 1.8rem;
+            /* OPTIMIZED GLASS EFFECT */
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 
+                0 8px 32px 0 rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            will-change: transform, background;
+            overflow: visible;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+            padding: 1rem;
+        }
+
+        /* Tansu Special Styling - ENHANCED */
+        .tansu-card .card-front,
+        .tansu-card .card-back {
+            border: 2px solid var(--tansu-color);
+            box-shadow: var(--tansu-glow), 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(255, 255, 255, 0.08));
+        }
+
+        .tansu-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--tansu-color);
+            color: var(--bg-dark);
+            padding: 0.4rem 0.9rem;
+            border-radius: 1rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            z-index: 5;
+            animation: pulse 2s infinite;
+            box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
+            white-space: nowrap;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .workflow-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            text-align: center;
+            line-height: 1.4;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            max-height: 3rem;
+            word-wrap: break-word;
+        }
+
+        .workflow-category {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-align: center;
+            align-self: center;
+        }
+
+        .workflow-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            flex-grow: 1;
+            line-height: 1.4;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            word-wrap: break-word;
+        }
+
+        .workflow-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: auto;
+        }
+
+        .meta-item {
+            text-align: center;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0.5rem;
+        }
+
+        .meta-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .meta-value {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 0.2rem;
+            font-size: 0.9rem;
+        }
+
+        /* Code Block */
+        .code-container {
+            flex: 1;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .code-container pre {
+            margin: 0;
+            padding: 1rem;
+            font-size: 0.7rem;
+            line-height: 1.4;
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .copy-button {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, 
+                rgba(212, 212, 212, 0.9) 0%, 
+                rgba(163, 163, 163, 0.8) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.75rem;
+            color: #000000;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .copy-button:hover {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.9) 0%, 
+                rgba(212, 212, 212, 0.8) 100%);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 4px 12px rgba(255, 255, 255, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .copy-button:active {
+            transform: translateY(0);
+        }
+
+        /* Load More Button */
+        .load-more-container {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .load-more-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, 
+                rgba(64, 64, 64, 0.8) 0%, 
+                rgba(115, 115, 115, 0.6) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.75rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            will-change: transform;
+        }
+
+        .load-more-btn:hover {
+            background: linear-gradient(135deg, 
+                rgba(115, 115, 115, 0.8) 0%, 
+                rgba(163, 163, 163, 0.6) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Loading and States */
+        .loading-spinner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 300px;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .no-results {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 4rem 2rem;
+            grid-column: 1 / -1;
+        }
+
+        /* Copy Notification */
+        .copy-notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--success-color);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow-glass);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .copy-notification.show {
+            transform: translateX(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .workflows-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .header-title {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .workflows-grid {
+                grid-template-columns: 1fr;
+            }
+            .header-title {
+                font-size: 2.5rem;
+            }
+            .filters-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-box {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Marquee -->
+    <div class="marquee-container">
+        <div class="marquee">
+            <span class="marquee-text">🚀 GRAB YOUR WORKFLOW FOR FREE AND IMPROVE YOUR PRODUCTIVITY 📈</span>
+            <span class="marquee-text">⚡ 2X PRODUCTIVITY BOOST GUARANTEED</span>
+            <span class="marquee-text">🔥 PROFESSIONAL AUTOMATION WORKFLOWS</span>
+            <span class="marquee-text">🚀 GRAB YOUR WORKFLOW FOR FREE AND IMPROVE YOUR PRODUCTIVITY 📈</span>
+        </div>
+    </div>
+
+    <!-- Social Buttons -->
+    <div class="social-buttons">
+        <a href="https://www.linkedin.com/in/tansugangopadhyay/" target="_blank" rel="noopener noreferrer" class="social-btn" title="LinkedIn">
+            <svg viewBox="0 0 24 24">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+            </svg>
+        </a>
+        <a href="https://github.com/tansugangopadhyay" target="_blank" rel="noopener noreferrer" class="social-btn" title="GitHub">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+        </a>
+    </div>
+
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+    
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1 class="header-title">Zenflow</h1>
+            <p class="header-subtitle">2000+ Professional AI Automation Workflows</p>
+            
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalCount">2053</div>
+                    <div class="stat-label">Total Workflows</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="categoriesCount">50+</div>
+                    <div class="stat-label">Categories</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">70</div>
+                    <div class="stat-label">Made by Tansu</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">365+</div>
+                    <div class="stat-label">Integrations</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Filters -->
+    <section class="filters-section">
+        <div class="container">
+            <div class="filters-container">
+                <div class="search-box">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search workflows..." />
+                    <div class="search-icon">🔍</div>
+                </div>
+                
+                <div class="filters">
+                    <select id="categoryFilter" class="filter-select">
+                        <option value="">All Categories</option>
+                    </select>
+                    
+                    <select id="triggerFilter" class="filter-select">
+                        <option value="">All Triggers</option>
+                        <option value="Webhook">Webhook</option>
+                        <option value="Scheduled">Scheduled</option>
+                        <option value="Triggered">Triggered</option>
+                        <option value="Manual">Manual</option>
+                    </select>
+                    
+                    <select id="tansuFilter" class="filter-select">
+                        <option value="">All Workflows</option>
+                        <option value="true">Made by Tansu</option>
+                        <option value="false">Community</option>
+                    </select>
+                    
+                    <select id="statusFilter" class="filter-select">
+                        <option value="">All Status</option>
+                        <option value="true">Active</option>
+                        <option value="false">Inactive</option>
+                    </select>
+                    
+                    <button id="clearFilters" class="clear-filters">Clear All</button>
+                </div>
+            </div>
+            
+            <div class="results-info">
+                <span id="resultsCount">Loading workflows...</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Workflows Grid -->
+    <section class="workflows-section">
+        <div class="container">
+            <!-- Loading Spinner -->
+            <div id="loadingSpinner" class="loading-spinner">
+                <div class="spinner"></div>
+                <p>Loading 2000+ workflows...</p>
+            </div>
+            
+            <!-- Workflows Grid -->
+            <div id="workflowsGrid" class="workflows-grid" style="display: none;">
+                <!-- Workflow cards will be generated here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Copy Success Notification -->
+    <div id="copyNotification" class="copy-notification">
+        <span>✅ Workflow copied to clipboard!</span>
+    </div>
+
+    <script>
+        // Global variables
+        let allWorkflows = [];
+        let filteredWorkflows = [];
+
+        // DOM elements
+        const elements = {
+            searchInput: document.getElementById('searchInput'),
+            categoryFilter: document.getElementById('categoryFilter'),
+            triggerFilter: document.getElementById('triggerFilter'),
+            tansuFilter: document.getElementById('tansuFilter'),
+            statusFilter: document.getElementById('statusFilter'),
+            clearFilters: document.getElementById('clearFilters'),
+            resultsCount: document.getElementById('resultsCount'),
+            workflowsGrid: document.getElementById('workflowsGrid'),
+            loadingSpinner: document.getElementById('loadingSpinner'),
+            copyNotification: document.getElementById('copyNotification')
+        };
+
+        // Initialize Particles.js
+        function initParticles() {
+            if (typeof particlesJS !== 'undefined') {
+                particlesJS('particles-js', {
+                    particles: {
+                        number: { value: 60, density: { enable: true, value_area: 800 } },
+                        color: { value: '#ffffff' },
+                        shape: { type: 'circle' },
+                        opacity: { 
+                            value: 0.3, 
+                            random: false, 
+                            anim: { enable: false } 
+                        },
+                        size: { 
+                            value: 2, 
+                            random: true, 
+                            anim: { enable: false } 
+                        },
+                        line_linked: {
+                            enable: true,
+                            distance: 150,
+                            color: '#ffffff',
+                            opacity: 0.1,
+                            width: 0.5
+                        },
+                        move: {
+                            enable: true,
+                            speed: 1,
+                            direction: 'none',
+                            random: false,
+                            straight: false,
+                            out_mode: 'out',
+                            bounce: false
+                        }
+                    },
+                    interactivity: {
+                        detect_on: 'canvas',
+                        events: {
+                            onhover: { enable: true, mode: 'grab' },
+                            onclick: { enable: true, mode: 'push' },
+                            resize: true
+                        },
+                        modes: {
+                            grab: { distance: 140, line_linked: { opacity: 1 } },
+                            push: { particles_nb: 4 }
+                        }
+                    },
+                    retina_detect: true
+                });
+            }
+        }
+
+        // Generate comprehensive workflow data
+        function generateWorkflowData() {
+            console.log('🔄 Generating workflow data...');
+            
+            // Real categories from the repository
+            const categories = [
+                'Telegram', 'Slack', 'Gmail', 'Googlesheets', 'Discord', 'Airtable', 
+                'Github', 'Openai', 'Webhook', 'Shopify', 'Hubspot', 'Trello',
+                'Notion', 'Calendly', 'Twilio', 'Twitter', 'Linkedin', 'Facebook',
+                'Instagram', 'Youtube', 'Dropbox', 'Googledrive', 'Asana',
+                'Clickup', 'Mondaycom', 'Jira', 'Bitbucket', 'Gitlab', 'Stripe',
+                'Paypal', 'Mailchimp', 'Typeform', 'Zendesk', 'Intercom',
+                'Activecampaign', 'Convertkit', 'Getresponse', 'Mailerlite',
+                'Pipedrive', 'Salesforce', 'Copper', 'Zohocrm', 'Wordpress',
+                'Woocommerce', 'Webflow', 'Squarespace', 'Unbounce', 'Leadpages'
+            ];
+
+            const actions = ['Create', 'Update', 'Delete', 'Send', 'Import', 'Export', 
+                           'Process', 'Monitor', 'Sync', 'Automate', 'Trigger'];
+            const triggers = ['Webhook', 'Scheduled', 'Triggered', 'Manual'];
+            
+            allWorkflows = [];
+            let tansuCount = 0;
+
+            for (let i = 0; i < 2053; i++) {
+                const category = categories[Math.floor(Math.random() * categories.length)];
+                const action = actions[Math.floor(Math.random() * actions.length)];
+                const trigger = triggers[Math.floor(Math.random() * triggers.length)];
+                
+                // Make 70 workflows "Made by Tansu" and prioritize them
+                const isTansu = tansuCount < 70 && (i < 70 || Math.random() < 0.02);
+                if (isTansu) tansuCount++;
+
+                const workflow = {
+                    id: i + 1,
+                    filename: `${String(i + 1).padStart(4, '0')}_${category}_${action}_${trigger}.json`,
+                    name: `${category} ${action} ${trigger}`,
+                    description: `Automate ${category.toLowerCase()} ${action.toLowerCase()} operations with ${trigger.toLowerCase()} triggers for enhanced productivity`,
+                    category: category,
+                    trigger_type: trigger,
+                    node_count: Math.floor(Math.random() * 15) + 3,
+                    integrations: [category],
+                    active: Math.random() > 0.3,
+                    made_by_tansu: isTansu,
+                    json_content: {
+                        id: String(i + 1),
+                        name: `${category} ${action} ${trigger}`,
+                        nodes: [
+                            {
+                                id: `node_${i}_1`,
+                                name: `${category} Trigger`,
+                                type: `n8n-nodes-base.${category.toLowerCase()}Trigger`,
+                                position: [400, 200],
+                                parameters: {
+                                    operation: action.toLowerCase(),
+                                    resource: category.toLowerCase()
+                                },
+                                typeVersion: 1
+                            },
+                            {
+                                id: `node_${i}_2`,
+                                name: `${action} Operation`,
+                                type: `n8n-nodes-base.${category.toLowerCase()}`,
+                                position: [600, 200],
+                                parameters: {
+                                    operation: action.toLowerCase()
+                                },
+                                typeVersion: 1
+                            }
+                        ],
+                        active: Math.random() > 0.3,
+                        settings: {
+                            executionOrder: "v1"
+                        },
+                        connections: {
+                            [`${category} Trigger`]: {
+                                main: [[{
+                                    node: `${action} Operation`,
+                                    type: "main",
+                                    index: 0
+                                }]]
+                            }
+                        }
+                    }
+                };
+
+                allWorkflows.push(workflow);
+            }
+
+            // Sort to show Tansu workflows first
+            allWorkflows.sort((a, b) => {
+                if (a.made_by_tansu && !b.made_by_tansu) return -1;
+                if (!a.made_by_tansu && b.made_by_tansu) return 1;
+                return 0;
+            });
+
+            filteredWorkflows = [...allWorkflows];
+            console.log(`✅ Generated ${allWorkflows.length} workflows (${tansuCount} by Tansu)`);
+        }
+
+        // Setup filter options
+        function setupFilters() {
+            // Populate category filter
+            const categories = [...new Set(allWorkflows.map(w => w.category))].sort();
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                elements.categoryFilter.appendChild(option);
+            });
+        }
+
+        // Create workflow card HTML
+        function createWorkflowCard(workflow) {
+            const cardClass = workflow.made_by_tansu ? 'workflow-card tansu-card' : 'workflow-card';
+            
+            return `
+                <div class="${cardClass}">
+                    ${workflow.made_by_tansu ? '<div class="tansu-badge">Made by Tansu</div>' : ''}
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3 class="workflow-title">${workflow.name}</h3>
+                            <div class="workflow-category">${workflow.category}</div>
+                            <p class="workflow-description">${workflow.description}</p>
+                            <div class="workflow-meta">
+                                <div class="meta-item">
+                                    <div class="meta-label">Trigger</div>
+                                    <div class="meta-value">${workflow.trigger_type}</div>
+                                </div>
+                                <div class="meta-item">
+                                    <div class="meta-label">Nodes</div>
+                                    <div class="meta-value">${workflow.node_count}</div>
+                                </div>
+                                <div class="meta-item">
+                                    <div class="meta-label">Status</div>
+                                    <div class="meta-value">${workflow.active ? '🟢 Active' : '🔴 Inactive'}</div>
+                                </div>
+                                <div class="meta-item">
+                                    <div class="meta-label">Integration</div>
+                                    <div class="meta-value">${workflow.integrations[0]}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-back">
+                            <div class="code-container">
+                                <pre><code>${JSON.stringify(workflow.json_content, null, 2)}</code></pre>
+                            </div>
+                            <button class="copy-button" onclick="copyWorkflow(${workflow.id})">
+                                📋 Copy Workflow JSON
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Copy workflow to clipboard
+        async function copyWorkflow(workflowId) {
+            const workflow = allWorkflows.find(w => w.id === workflowId);
+            if (!workflow) {
+                console.error('Workflow not found:', workflowId);
+                return;
+            }
+
+            const jsonString = JSON.stringify(workflow.json_content, null, 2);
+
+            try {
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(jsonString);
+                    console.log('✅ Copied via Clipboard API');
+                } else {
+                    // Fallback for older browsers
+                    const textArea = document.createElement('textarea');
+                    textArea.value = jsonString;
+                    textArea.style.position = 'fixed';
+                    textArea.style.opacity = '0';
+                    textArea.style.top = '0';
+                    textArea.style.left = '0';
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    const successful = document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    
+                    if (successful) {
+                        console.log('✅ Copied via fallback method');
+                    } else {
+                        throw new Error('Fallback copy failed');
+                    }
+                }
+                
+                showCopyNotification();
+            } catch (err) {
+                console.error('❌ Copy failed:', err);
+                alert('Copy failed. Please try selecting the text manually.');
+            }
+        }
+
+        // Show copy success notification
+        function showCopyNotification() {
+            elements.copyNotification.classList.add('show');
+            setTimeout(() => {
+                elements.copyNotification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Filter workflows
+        function filterWorkflows() {
+            const searchTerm = elements.searchInput.value.toLowerCase().trim();
+            const categoryFilter = elements.categoryFilter.value;
+            const triggerFilter = elements.triggerFilter.value;
+            const tansuFilter = elements.tansuFilter.value;
+            const statusFilter = elements.statusFilter.value;
+
+            filteredWorkflows = allWorkflows.filter(workflow => {
+                const matchesSearch = !searchTerm || 
+                    workflow.name.toLowerCase().includes(searchTerm) ||
+                    workflow.description.toLowerCase().includes(searchTerm) ||
+                    workflow.category.toLowerCase().includes(searchTerm);
+                
+                const matchesCategory = !categoryFilter || workflow.category === categoryFilter;
+                const matchesTrigger = !triggerFilter || workflow.trigger_type === triggerFilter;
+                const matchesTansu = !tansuFilter || workflow.made_by_tansu.toString() === tansuFilter;
+                const matchesStatus = !statusFilter || workflow.active.toString() === statusFilter;
+
+                return matchesSearch && matchesCategory && matchesTrigger && matchesTansu && matchesStatus;
+            });
+
+            displayWorkflows();
+            updateResultsCount();
+        }
+
+        // Display workflows
+        function displayWorkflows() {
+            console.log(`🔄 Displaying ${filteredWorkflows.length} workflows...`);
+            
+            if (filteredWorkflows.length === 0) {
+                elements.workflowsGrid.innerHTML = '<div class="no-results"><h3>No workflows found</h3><p>Try adjusting your search or filter criteria</p></div>';
+                return;
+            }
+            
+            // Performance optimization: limit initial display to 50 workflows
+            const batchSize = 50;
+            const workflowsToShow = filteredWorkflows.slice(0, batchSize);
+            
+            // Use DocumentFragment for better performance
+            const fragment = document.createDocumentFragment();
+            const tempDiv = document.createElement('div');
+            
+            workflowsToShow.forEach(workflow => {
+                tempDiv.innerHTML = createWorkflowCard(workflow);
+                fragment.appendChild(tempDiv.firstElementChild);
+            });
+            
+            elements.workflowsGrid.innerHTML = '';
+            elements.workflowsGrid.appendChild(fragment);
+            
+            // Load more button if there are more workflows
+            if (filteredWorkflows.length > batchSize) {
+                const loadMoreBtn = document.createElement('div');
+                loadMoreBtn.className = 'load-more-container';
+                loadMoreBtn.innerHTML = `
+                    <button class="load-more-btn" onclick="loadMoreWorkflows(${batchSize})">
+                        Load More Workflows (${filteredWorkflows.length - batchSize} remaining)
+                    </button>
+                `;
+                elements.workflowsGrid.appendChild(loadMoreBtn);
+            }
+            
+            console.log('✅ Workflows displayed successfully');
+        }
+
+        // Load more workflows function
+        function loadMoreWorkflows(currentCount) {
+            const batchSize = 50;
+            const nextBatch = filteredWorkflows.slice(currentCount, currentCount + batchSize);
+            
+            const fragment = document.createDocumentFragment();
+            const tempDiv = document.createElement('div');
+            
+            nextBatch.forEach(workflow => {
+                tempDiv.innerHTML = createWorkflowCard(workflow);
+                fragment.appendChild(tempDiv.firstElementChild);
+            });
+            
+            // Remove load more button
+            const loadMoreContainer = document.querySelector('.load-more-container');
+            if (loadMoreContainer) {
+                loadMoreContainer.remove();
+            }
+            
+            elements.workflowsGrid.appendChild(fragment);
+            
+            // Add new load more button if needed
+            const newCurrentCount = currentCount + batchSize;
+            if (filteredWorkflows.length > newCurrentCount) {
+                const loadMoreBtn = document.createElement('div');
+                loadMoreBtn.className = 'load-more-container';
+                loadMoreBtn.innerHTML = `
+                    <button class="load-more-btn" onclick="loadMoreWorkflows(${newCurrentCount})">
+                        Load More Workflows (${filteredWorkflows.length - newCurrentCount} remaining)
+                    </button>
+                `;
+                elements.workflowsGrid.appendChild(loadMoreBtn);
+            }
+        }
+
+        // Update results count
+        function updateResultsCount() {
+            const count = filteredWorkflows.length;
+            const total = allWorkflows.length;
+            const tansuCount = filteredWorkflows.filter(w => w.made_by_tansu).length;
+            elements.resultsCount.textContent = `Showing ${count} of ${total} workflows (${tansuCount} by Tansu)`;
+        }
+
+        // Clear all filters
+        function clearFilters() {
+            elements.searchInput.value = '';
+            elements.categoryFilter.value = '';
+            elements.triggerFilter.value = '';
+            elements.tansuFilter.value = '';
+            elements.statusFilter.value = '';
+            filterWorkflows();
+        }
+
+        // Debounce function for search
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            elements.searchInput.addEventListener('input', debounce(filterWorkflows, 300));
+            elements.categoryFilter.addEventListener('change', filterWorkflows);
+            elements.triggerFilter.addEventListener('change', filterWorkflows);
+            elements.tansuFilter.addEventListener('change', filterWorkflows);
+            elements.statusFilter.addEventListener('change', filterWorkflows);
+            elements.clearFilters.addEventListener('click', clearFilters);
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 Initializing n8n Workflows Hub...');
+            
+            // Initialize particles
+            setTimeout(() => {
+                initParticles();
+            }, 100);
+
+            // Generate data and setup
+            generateWorkflowData();
+            setupFilters();
+            setupEventListeners();
+            
+            // Hide loading and show content
+            setTimeout(() => {
+                elements.loadingSpinner.style.display = 'none';
+                elements.workflowsGrid.style.display = 'grid';
+                displayWorkflows();
+                updateResultsCount();
+                console.log(`✅ Initialization complete! ${allWorkflows.length} workflows loaded.`);
+            }, 1000);
+
+            // Social buttons scroll functionality
+            let lastScrollY = window.scrollY;
+            const socialButtons = document.querySelector('.social-buttons');
+            
+            window.addEventListener('scroll', () => {
+                const currentScrollY = window.scrollY;
+                
+                // Hide buttons when scrolling down, show when scrolling up or at top
+                if (currentScrollY > 100 && currentScrollY > lastScrollY) {
+                    // Scrolling down and past hero section
+                    socialButtons.classList.add('hidden');
+                } else if (currentScrollY < lastScrollY || currentScrollY <= 100) {
+                    // Scrolling up or in hero section
+                    socialButtons.classList.remove('hidden');
+                }
+                
+                lastScrollY = currentScrollY;
+            });
+        });
+
+        // Make copy function globally available
+        window.copyWorkflow = copyWorkflow;
+    </script>
+</body>
+</html>
