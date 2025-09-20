@@ -32,6 +32,7 @@ Seamlessly browse and unlock over **2,000+ expertly selected AI-powered workflow
 
 1. **Clone or download this repo**
 git clone https://github.com/tansugangopadhyay/ZenFlow.git
+
 cd ZenFlow
 
 2. **Open `index.html` in your browser**  
